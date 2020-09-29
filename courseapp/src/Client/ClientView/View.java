@@ -25,6 +25,7 @@ public class View extends JFrame{
     private String cName;
     private int cID;
     private int cSec;
+    private int cap;
     private String studentName;
     private int studentId;
     private boolean detailsEntered;
@@ -61,10 +62,10 @@ public class View extends JFrame{
         JPanel jp = new JPanel();
         jp.setLayout(new BoxLayout(jp,1));
 
-        JButton search = new JButton("Search courses in Course Catalogue");
-        JButton addCourse = new JButton("Add course to Student's course");
-        JButton remove = new JButton("Remove course from Student's courses");
-        JButton viewAll = new JButton("View all the courses in Catalogue");
+        JButton search = new JButton("Search courses in db");
+        JButton addCourse = new JButton("Add course to db");
+        JButton remove = new JButton("Remove course from db");
+        JButton viewAll = new JButton("View all the courses in db");
         JButton viewStuCourses = new JButton("View all the courses taken by Student");
         JButton enterDetails = new JButton("Initialize Model");
         JButton quit = new JButton("Quit the application");
@@ -192,7 +193,7 @@ public class View extends JFrame{
      */
     public String addTheCourse() {
         callForInput(true); // true prompts for input of section number
-        return action.addCourse(cName, cID, cSec);
+        return action.addCourse(cName, cID, cSec, cap);
     }
 
 
@@ -215,7 +216,19 @@ public class View extends JFrame{
         this.cName = this.cName.toUpperCase();
         if (act == true) {
             callInputForSection();
+            callInputForCap();
         }
+    }
+
+    public void callInputForCap() {
+        int sec = 1;
+        try {
+            sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Cap Number: "));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Invalid section entered, Please try again", "Error!",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        this.cap = sec;
     }
 
     /**

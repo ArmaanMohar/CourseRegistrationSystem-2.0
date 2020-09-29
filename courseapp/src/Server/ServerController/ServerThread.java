@@ -84,6 +84,7 @@ public class ServerThread extends Thread {
      * Runs the thread
      */
     public void run() {
+        socketOut.flush();
         String line = "";
 
         while (running) {
@@ -109,21 +110,22 @@ public class ServerThread extends Thread {
                 case 1:
                     String searchedCourse = model.searchCourse(name, id);
                     socketOut.println(searchedCourse);
-                    //socketOut.flush();
+                    socketOut.flush();
                     break;
-                    /*
                 case 2:
-                    //String addedCourse = model.addCourse(name, id, secNum);
-                    //socketOut.println(addedCourse);
+                    String addedCourse = model.addCourse(name, id, secNum, cap);
+                    socketOut.println(addedCourse);
+                    socketOut.flush();
                     break;
                 case 3:
-                    //String remove = model.removeCourse(name, id);
-                   // socketOut.println(remove);
+                    String remove = model.removeCourse(name, id);
+                    socketOut.println(remove);
+                    socketOut.flush();
                     break;
-                    */
                 case 4:
                     String fullCatalogue = model.viewAllCourses();
                     socketOut.println(fullCatalogue);
+                    socketOut.flush();
                     break;
                     /*
                 case 5:

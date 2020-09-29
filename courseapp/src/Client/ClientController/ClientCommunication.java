@@ -101,7 +101,7 @@ public class ClientCommunication {
 	 */
 	public String searchCourse(String name, int id) {
 		String line = "1 ";
-		line += name + " 0 " + id + " 0";
+		line += name + " " + id + " 0" + " 0";
 
 		return communicate(line);
 	}
@@ -114,9 +114,9 @@ public class ClientCommunication {
 	 * @param sec  course section
 	 * @return string of server response
 	 */
-	public String addCourse(String name, int id, int sec) {
+	public String addCourse(String name, int id, int sec, int cap) {
 		String line = "2 ";
-		line += name + " " + id + " " + sec;
+		line += name + " " + id + " " + sec + " " + cap;
 
 		return communicate(line);
 	}
@@ -130,7 +130,7 @@ public class ClientCommunication {
 	 */
 	public String removeCourse(String name, int id) {
 		String line = "3 ";
-		line += name + " " + id + " 0";
+		line += name + " " + id + " 0" + " 0";
 
 		return communicate(line);
 	}
