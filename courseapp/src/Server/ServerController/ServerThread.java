@@ -53,7 +53,8 @@ public class ServerThread extends Thread {
     private ServerCommunication serCom;
     static String URL;
 	private String user;
-	private String password;
+    private String password;
+    private Connection myCon;
     
 
     /**
@@ -69,25 +70,15 @@ public class ServerThread extends Thread {
         } catch (Exception e) {
             System.out.println("Socket reading failed.");
         }
+        this.model = new Model(this);
         running = true;
         this.serCom = serCom;
-        URL = "jdbc:mysql://localhost:3306/mydb";
-		user = "root";
-        password = "root";
-        connecttoDB();
+       // URL = "jdbc:mysql://localhost:3306/mydb";
+		//user = "root";
+        //password = "root";
+        //connecttoDB();
     }
 
-    public void connecttoDB(){
-        try{
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection myCon = DriverManager.getConnection(URL, user, password);
-			Statement myState = myCon.createStatement();
-			String sql = "insert into student" + "(name, id)" + "values ('water', '67')";
-			myState.executeUpdate(sql);
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-    }
 
     /**
      * Runs the thread
@@ -118,6 +109,7 @@ public class ServerThread extends Thread {
                 case 1:
                     String searchedCourse = model.searchCourse(name, id);
                     socketOut.println(searchedCourse);
+                    //socketOut.flush();
                     break;
                     /*
                 case 2:
@@ -128,10 +120,12 @@ public class ServerThread extends Thread {
                     //String remove = model.removeCourse(name, id);
                    // socketOut.println(remove);
                     break;
+                    */
                 case 4:
-                    //String fullCatalogue = model.viewAllCourses();
-                   // socketOut.println(fullCatalogue);
+                    String fullCatalogue = model.viewAllCourses();
+                    socketOut.println(fullCatalogue);
                     break;
+                    /*
                 case 5:
                     //String takenCourses = model.coursesTaken();
                    // socketOut.println(takenCourses);
@@ -166,10 +160,6 @@ public class ServerThread extends Thread {
                     */
                 case 11:
                     closeConnection();
-                case 12:
-                    model = new Model();
-                    socketOut.println(model.worked(model.getS()));
-                    break;
                 default:
                     socketOut.println("default");
                     closeConnection();

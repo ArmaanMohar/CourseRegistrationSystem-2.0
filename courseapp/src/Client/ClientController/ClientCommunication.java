@@ -27,10 +27,6 @@ public class ClientCommunication {
 			e.getStackTrace();
 		}
     }
-    public String populate(){
-        String line = "12 0 0 0 0";
-        return communicate(line);
-    }
     /**
 	 * Passes the student information to the server
 	 * 
@@ -105,7 +101,7 @@ public class ClientCommunication {
 	 */
 	public String searchCourse(String name, int id) {
 		String line = "1 ";
-		line += name + " 0" + id + " 0";
+		line += name + " 0 " + id + " 0";
 
 		return communicate(line);
 	}
@@ -146,7 +142,7 @@ public class ClientCommunication {
 	 * @return server response string
 	 */
 	public String viewAllCourses() {
-		return communicate("4 allCourses 0 0");
+		return communicate("4 allCourses 0 0 0");
 	}
 
 	/**

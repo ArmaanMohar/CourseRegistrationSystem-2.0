@@ -96,9 +96,9 @@ public class View extends JFrame{
         jp.add(new JLabel(" "));
         jp.add(quit);
 
-        enterDetails.addActionListener((ActionEvent e) ->{
-            guiSerOutput(populatedb());
-        });
+       // enterDetails.addActionListener((ActionEvent e) ->{
+         //   guiSerOutput(populatedb());
+        //});
 
         search.addActionListener((ActionEvent e) -> {
             guiSerOutput(searchCourse());
@@ -120,10 +120,6 @@ public class View extends JFrame{
         });
 
         return jp;
-    }
-
-    public String populatedb(){
-        return action.populate();
     }
 
     /**
