@@ -9,6 +9,7 @@ import java.sql.Statement;
 import Server.ServerController.ServerThread;
 import Server.ServerModel.Registration.*;
 
+
 public class Model {
     private ServerThread myThread;
     private Statement myState;
@@ -27,20 +28,43 @@ public class Model {
 		user = "root";
         password = "root";
         connecttoDB();
+        
     }
 
     public void connecttoDB(){
         try{
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			myCon = DriverManager.getConnection(URL, user, password);
-            //Statement myState = myCon.createStatement();
             System.out.println("Client connected to db...");
-			//String sql = "insert into student" + "(name, id)" + "values ('bart', '1')";
-            //myState.executeUpdate(sql);
 	    } catch (Exception e) {
 		    e.printStackTrace();
 	    }
     }
+
+    public String validateUser(int ID, String pw, String n){
+        String result = "# ";
+        try {
+            search = myCon.prepareStatement("SELECT userName FROM mydb.users WHERE userPassword=(?) and userID=(?) and userName=(?)");
+            search.setString(1, pw);
+            search.setInt(2, ID);
+            search.setString(3, n);
+            myRs = search.executeQuery();
+            if(myRs.isBeforeFirst()){
+                do {
+                    String userName = myRs.getString("userName");
+                result += userName;
+                } while (myRs.next());
+            }else if(!myRs.isBeforeFirst()){
+                result = "# -1";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return result;
+    }
+
+   
 
     public String searchCourse(String name, int id){
         String result = "#Heres what I found #";

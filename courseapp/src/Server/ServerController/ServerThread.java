@@ -73,10 +73,6 @@ public class ServerThread extends Thread {
         this.model = new Model(this);
         running = true;
         this.serCom = serCom;
-       // URL = "jdbc:mysql://localhost:3306/mydb";
-		//user = "root";
-        //password = "root";
-        //connecttoDB();
     }
 
 
@@ -105,6 +101,7 @@ public class ServerThread extends Thread {
             int id = Integer.parseInt(inputs[2]); // args String
             int secNum = Integer.parseInt(inputs[3]); // args String passed into int
             int cap = Integer.parseInt(inputs[4]);
+            String pw = inputs[5];
 
             switch (choice) {
                 case 1:
@@ -160,8 +157,16 @@ public class ServerThread extends Thread {
                     //socketOut.println(list);
                     break;
                     */
+                case 10:
+                    socketOut.flush();
+                    String accessGranted = model.validateUser(id, pw, name);
+                    socketOut.println(accessGranted);
+                    socketOut.flush();
+                    break;
                 case 11:
+                    socketOut.flush();
                     closeConnection();
+                
                 default:
                     socketOut.println("default");
                     closeConnection();

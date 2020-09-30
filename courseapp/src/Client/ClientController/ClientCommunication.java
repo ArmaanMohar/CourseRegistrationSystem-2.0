@@ -36,7 +36,7 @@ public class ClientCommunication {
 	 */
 	public String passStudentInfo(String studentName, int studentId) {
 		String line = "6 ";
-		line += studentName + " " + studentId + " 0";
+		line += studentName + " " + studentId + " 0" + " 0";
 
 		return communicate(line);
 	}
@@ -49,7 +49,7 @@ public class ClientCommunication {
 	 */
 	public String showClasslist(String name, int id){
 		String line = "10 ";
-		line += name + " " + id + " 0";
+		line += name + " " + id + " 0" + " 0" + " ";
 		return communicate(line);
 	}
 
@@ -63,7 +63,7 @@ public class ClientCommunication {
 	 */
 	public String addNewCourse(String name, int id, int sec, int cap){
 		String line = "8 ";
-		line += name + " " + id + " " + sec +  " " + cap + " 0";
+		line += name + " " + id + " " + sec +  " " + cap + " 0"+ " ";
 		return communicate(line);
 	}
 
@@ -75,7 +75,7 @@ public class ClientCommunication {
 	 */
 	public String checkifCourseCanRun(String courseName, int courseId){
 		String line = "9 ";
-		line += courseName + " " + courseId + " 0";
+		line += courseName + " " + courseId + " 0" + " " + " 0" ;
 		return communicate(line);
 	}
 
@@ -87,7 +87,7 @@ public class ClientCommunication {
 	 */
 	public String passAdminInfo(String adminName, int adminId){
 		String line = "7 ";
-		line += adminName + " " + adminId + " 0";
+		line += adminName + " " + adminId + " 0" + " "+ " 0";
 		return communicate(line);
 	}
 
@@ -101,7 +101,7 @@ public class ClientCommunication {
 	 */
 	public String searchCourse(String name, int id) {
 		String line = "1 ";
-		line += name + " " + id + " 0" + " 0";
+		line += name + " " + id + " 0" + " 0"+ " "+ " 0";
 
 		return communicate(line);
 	}
@@ -116,7 +116,7 @@ public class ClientCommunication {
 	 */
 	public String addCourse(String name, int id, int sec, int cap) {
 		String line = "2 ";
-		line += name + " " + id + " " + sec + " " + cap;
+		line += name + " " + id + " " + sec + " " + cap + " 0";
 
 		return communicate(line);
 	}
@@ -130,7 +130,7 @@ public class ClientCommunication {
 	 */
 	public String removeCourse(String name, int id) {
 		String line = "3 ";
-		line += name + " " + id + " 0" + " 0";
+		line += name + " " + id + " 0" +" "+ " 0";
 
 		return communicate(line);
 	}
@@ -142,7 +142,7 @@ public class ClientCommunication {
 	 * @return server response string
 	 */
 	public String viewAllCourses() {
-		return communicate("4 allCourses 0 0 0");
+		return communicate("4 allCourses 0 0 0 0");
 	}
 
 	/**
@@ -152,14 +152,20 @@ public class ClientCommunication {
 	 * @return server response string
 	 */
 	public String showStudentCourses() {
-		return communicate("5 stuCourses 0 0");
+		return communicate("5 stuCourses 0 0 0 0");
+	}
+
+	public String checkPW(int ID, String p, String n){
+		String line = "10 ";
+		line += n + " " + ID + " 0" + " 0" + " " + p;
+		return communicate(line);
 	}
 
 	/**
 	 * Closes the connection to server and turns off the server
 	 */
 	public void closeCon() {
-		communicate("11 closeCon 0 0");
+		communicate("11 closeCon 0 0 0 0");
 		try {
 			socketIn.close();
 			socketOut.close();
