@@ -56,15 +56,10 @@ public class ClientGUI extends GUI {
         jp.setLayout(new BoxLayout(jp,1));
 
         JButton search = new JButton("Search for courses in db");
-        JButton addCourseToMyCourses = new JButton("Add course to my courses");
-        JButton removeCourseFromMyCourses = new JButton("Remove course from my courses");
+        JButton addCourseToMyCourseList = new JButton("Add course to my courses");
+        JButton removeCourseFromMyCourseList = new JButton("Remove course from my courses");
         JButton viewAll = new JButton("View all the courses in db");
-        JButton viewStuCourses = new JButton("View all the courses taken by Student");
-
-
-
-        JButton addCourse = new JButton("Add course to db");
-        JButton remove = new JButton("Remove course from db");
+        JButton viewMyCourses = new JButton("View all the courses taken by Student");
         JButton enterDetails = new JButton("LOG IN");
         JButton quit = new JButton("Quit the application");
 
@@ -72,10 +67,10 @@ public class ClientGUI extends GUI {
 
         // setting visibilities of buttons
         search.setVisible(detailsEntered);
-        addCourse.setVisible(detailsEntered);
-        remove.setVisible(detailsEntered);
+        addCourseToMyCourseList.setVisible(detailsEntered);
+        removeCourseFromMyCourseList.setVisible(detailsEntered);
         viewAll.setVisible(detailsEntered);
-        viewStuCourses.setVisible(detailsEntered);
+        viewMyCourses.setVisible(detailsEntered);
         enterDetails.setVisible(!detailsEntered);
         quit.setVisible(detailsEntered);
         quit.setVisible(true);
@@ -86,13 +81,13 @@ public class ClientGUI extends GUI {
         // creating spaces between buttons using JLabel
         jp.add(search);
         jp.add(new JLabel(" "));
-        jp.add(addCourse);
+        jp.add(addCourseToMyCourseList);
         jp.add(new JLabel(" "));
-        jp.add(remove);
+        jp.add(removeCourseFromMyCourseList);
         jp.add(new JLabel(" "));
         jp.add(viewAll);
         jp.add(new JLabel(" "));
-        jp.add(viewStuCourses);
+        jp.add(viewMyCourses);
         jp.add(new JLabel(" "));
         jp.add(quit);
 
@@ -151,10 +146,10 @@ public class ClientGUI extends GUI {
                     detailsEntered = true;
                     guiSerOutput("# Welcome "+ this.studentName);
                     search.setVisible(detailsEntered);
-                    addCourse.setVisible(detailsEntered);
-                    remove.setVisible(detailsEntered);
+                    addCourseToMyCourseList.setVisible(detailsEntered);
+                    removeCourseFromMyCourseList.setVisible(detailsEntered);
                     viewAll.setVisible(detailsEntered);
-                    viewStuCourses.setVisible(detailsEntered);
+                    viewMyCourses.setVisible(detailsEntered);
                     enterDetails.setVisible(!detailsEntered);
                     quit.setVisible(true);
                 }     
@@ -165,16 +160,16 @@ public class ClientGUI extends GUI {
         search.addActionListener((ActionEvent e) -> {
             guiSerOutput(searchCourse());
         });
-        addCourse.addActionListener((ActionEvent e) -> {
-            guiSerOutput(addTheCourse());
+        addCourseToMyCourseList.addActionListener((ActionEvent e) -> {
+            guiSerOutput(addCourseToMySchedule());
         });
-        remove.addActionListener((ActionEvent e) -> {
-            guiSerOutput(removeCourse());
+        removeCourseFromMyCourseList.addActionListener((ActionEvent e) -> {
+            guiSerOutput(removeCourseFromSchedule());
         });
         viewAll.addActionListener((ActionEvent e) -> {
             guiSerOutput(viewAllCourses());
         });
-        viewStuCourses.addActionListener((ActionEvent e) -> {
+        viewMyCourses.addActionListener((ActionEvent e) -> {
             guiSerOutput(studentCourses());
         });
         quit.addActionListener((ActionEvent e) -> {
@@ -182,6 +177,17 @@ public class ClientGUI extends GUI {
         });
 
         return jp;
+    }
+
+    public String addCourseToMySchedule(){
+        cName = callInputForName();
+        callInputForSection();
+        return theView.getAction().addCourseToStudent(this.cName, this.studentId, this.cSec);
+    }
+
+    public String removeCourseFromSchedule(){
+        cName = callInputForName();
+        return theView.getAction().removeCourseFromStu(cName, this.studentId);
     }
 
     
@@ -192,7 +198,7 @@ public class ClientGUI extends GUI {
      * @return studentCourses String
      */
     public String studentCourses() {
-        return theView.getAction().showStudentCourses();
+        return theView.getAction().getMyCourseList(this.studentId);
     }
 
     
@@ -222,86 +228,6 @@ public class ClientGUI extends GUI {
         callForInput(false);
         return theView.getAction().searchCourse(cName, cID);
     }
-
-    /**
-     * Helps other functions to get input for course name and id
-     */
-    public void callForInput(boolean act) {
-        this.cName = callInputForName();
-        if (cName.isEmpty() || (cName.compareTo(" ") == 0) || cName == null) {
-            JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-            return; // don't ask for id input if name not entered correctly
-        }
-        this.cID = callInputForID();
-        this.cName = this.cName.toUpperCase();
-        if (act == true) {
-            callInputForSection();
-            callInputForCap();
-        }
-    }
-
-    public void callInputForCap() {
-        int sec = 1;
-        try {
-            sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Cap Number: "));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid section entered, Please try again", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        this.cap = sec;
-    }
-
-    /**
-     * Creates input dialog and asks for input from user, sets the input as cSec
-     */
-    public void callInputForSection() {
-        int sec = 1;
-        try {
-            sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Section Number: "));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid section entered, Please try again", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        this.cSec = sec;
-    }
-
-    /**
-     * Creates input dialog and asks for input from user
-     * 
-     * @return id integer id entered
-     */
-    public int callInputForID() {
-        int id = -1;
-        try {
-            id = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Course ID: "));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid ID entered, Please enter only numeric value", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-
-        return id;
-    }
-
-    /**
-     * Creates input dialog and asks for input from user
-     * 
-     * @return name first word of string of name
-     */
-    public String callInputForName() {
-        String name = "";
-        try {
-            name = JOptionPane.showInputDialog(null, "Enter the name of the Course");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        String[] mulWords = name.split(" ");
-        if (mulWords[0].isEmpty()) {
-            return mulWords[1]; // return second words if first words entered was space or empty
-        }
-
-        return mulWords[0]; // only accepting the first word entered as the name
-    }
+ 
     
 }

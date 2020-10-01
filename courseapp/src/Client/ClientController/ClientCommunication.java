@@ -157,7 +157,7 @@ public class ClientCommunication {
 
 	public String checkPW(int ID, String p, String n, int view){
 		String line = "10 ";
-		line += n + " " + ID + " " + view + " 0" + " " + p;
+		line += n + " " + ID + " " + view + " 0" + " "+ p;
 		return communicate(line);
 	}
 
@@ -183,6 +183,20 @@ public class ClientCommunication {
 
 	public String viewUsers(){
 		return communicate("8 view 0 0 0 0");
+	}
+
+	public String addCourseToStudent(String courseN, int stuID, int courseSec){
+		String line = "7 ";
+		line += courseN + " "+ stuID + " " + courseSec + " 0" + " n";
+		return communicate(line);
+	}
+
+	public String getMyCourseList(int ID){
+		return communicate("6 list"+" "+ID+" 0"+" 0"+ " n");
+	}
+
+	public String removeCourseFromStu(String name, int id){
+		return communicate("5 "+name+" "+id+" 0"+" 0"+ " n");
 	}
 
 	/*

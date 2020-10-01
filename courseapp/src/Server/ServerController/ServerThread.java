@@ -163,6 +163,21 @@ public class ServerThread extends Thread {
                     socketOut.flush();
                     break;
                     */
+                case 5:
+                    String removeCourseFromMyList = model.removeFromStudentList(name, id);
+                    socketOut.println(removeCourseFromMyList);
+                    socketOut.flush();
+                    break;
+                case 6:
+                    String courseList = model.getCourseList(id);
+                    socketOut.println(courseList);
+                    socketOut.flush();
+                    break;
+                case 7:
+                    String courseAdded = model.addCourseStudent(name, id, secNum);
+                    socketOut.println(courseAdded);
+                    socketOut.flush();
+                    break;
                 case 8:
                     String users = model.viewUsers();
                     socketOut.println(users);

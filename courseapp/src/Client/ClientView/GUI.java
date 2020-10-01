@@ -105,10 +105,14 @@ public abstract class GUI extends JFrame {
             callInputForCap();
         }
     }
+
+    /**
+     * course cap
+     */
     public void callInputForCap() {
         int sec = 1;
         try {
-            sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Cap Number: "));
+            sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter Course Cap Number: "));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid section entered, Please try again", "Error!",
                     JOptionPane.ERROR_MESSAGE);
@@ -117,12 +121,13 @@ public abstract class GUI extends JFrame {
     }
 
     /**
+     * course section
      * Creates input dialog and asks for input from user, sets the input as cSec
      */
     public void callInputForSection() {
         int sec = 1;
         try {
-            sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Section Number: "));
+            sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter Course Section Number(between 1 and 3): "));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid section entered, Please try again", "Error!",
                     JOptionPane.ERROR_MESSAGE);
@@ -131,14 +136,15 @@ public abstract class GUI extends JFrame {
     }
 
     /**
-     * Creates input dialog and asks for input from user
+     * Course ID
+     * Creates input dialog and asks for course id input from user
      * 
      * @return id integer id entered
      */
     public int callInputForID() {
         int id = -1;
         try {
-            id = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Course ID: "));
+            id = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter Course ID: "));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid ID entered, Please enter only numeric value", "Error!",
                     JOptionPane.ERROR_MESSAGE);
@@ -148,6 +154,7 @@ public abstract class GUI extends JFrame {
     }
 
     /**
+     * Course Name
      * Creates input dialog and asks for input from user
      * 
      * @return name first word of string of name
@@ -155,7 +162,7 @@ public abstract class GUI extends JFrame {
     public String callInputForName() {
         String name = "";
         try {
-            name = JOptionPane.showInputDialog(null, "Enter the name of the Course");
+            name = JOptionPane.showInputDialog(null, "Enter Course Name: ");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
                     JOptionPane.ERROR_MESSAGE);
@@ -168,6 +175,9 @@ public abstract class GUI extends JFrame {
         return mulWords[0]; // only accepting the first word entered as the name
     }
 
+    /**
+     * @return User ID
+     */
     public int callInputForUserID() {
         int id = -1;
         try {
@@ -180,6 +190,11 @@ public abstract class GUI extends JFrame {
         return id;
     }
 
+
+    /**
+     * 
+     * @return user Name
+     */
     public String callInputForUserName() {
         String name = "";
         try {
@@ -196,6 +211,10 @@ public abstract class GUI extends JFrame {
         return mulWords[0]; // only accepting the first word entered as the name
     }
 
+    /**
+     * 
+     * @return User password
+     */
     public String callInputForUserPassword() {
         String name = "";
         try {
