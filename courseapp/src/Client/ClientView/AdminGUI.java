@@ -29,6 +29,7 @@ public class AdminGUI extends GUI {
         adminId=-1;
         valid="";
         pw = "";
+        view = 0;
         tGUI();
     }
 
@@ -64,6 +65,8 @@ public class AdminGUI extends GUI {
         JButton viewAll = new JButton("View all the courses in db");
         JButton viewStuCourses = new JButton("View all the courses taken by Student");
         JButton enterDetails = new JButton("LOG IN");
+        JButton addUser = new JButton("Add New User");
+        JButton viewAllUsers = new JButton("View All Users");
         JButton quit = new JButton("Quit the application");
 
 
@@ -75,6 +78,8 @@ public class AdminGUI extends GUI {
         viewAll.setVisible(detailsEntered);
         viewStuCourses.setVisible(detailsEntered);
         enterDetails.setVisible(!detailsEntered);
+        addUser.setVisible(detailsEntered);
+        viewAllUsers.setVisible(detailsEntered);
         quit.setVisible(detailsEntered);
         quit.setVisible(true);
 
@@ -91,6 +96,10 @@ public class AdminGUI extends GUI {
         jp.add(viewAll);
         jp.add(new JLabel(" "));
         jp.add(viewStuCourses);
+        jp.add(new JLabel(" "));
+        jp.add(addUser);
+        jp.add(new JLabel(" "));
+        jp.add(viewAllUsers);
         jp.add(new JLabel(" "));
         jp.add(quit);
 
@@ -141,7 +150,7 @@ public class AdminGUI extends GUI {
                 }
                 this.adminId = Integer.parseInt(ID.getText()); 
                 this.adminName = N.getText();   
-                String valid = validatePassword(adminId , password.getText(), adminName);
+                String valid = validatePassword(adminId , password.getText(), adminName, view);
                 if(valid.equals("# -1")){
                     JOptionPane.showMessageDialog(this,"Invalid CREDENTIALS", "Invalid CREDENTIALS", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -154,6 +163,8 @@ public class AdminGUI extends GUI {
                     viewAll.setVisible(detailsEntered);
                     viewStuCourses.setVisible(detailsEntered);
                     enterDetails.setVisible(!detailsEntered);
+                    addUser.setVisible(detailsEntered);
+                    viewAllUsers.setVisible(detailsEntered);
                     quit.setVisible(true);
                 }     
                 log.dispose();
@@ -173,13 +184,45 @@ public class AdminGUI extends GUI {
             guiSerOutput(viewAllCourses());
         });
         viewStuCourses.addActionListener((ActionEvent e) -> {
-            guiSerOutput(studentCourses());
+            //guiSerOutput(viewThisstudentCourses());
+        });
+        addUser.addActionListener((ActionEvent e) ->{
+            guiSerOutput(addNewUser());
+        });
+        viewAllUsers.addActionListener((ActionEvent e) ->{
+            guiSerOutput(viewAllUsers());
         });
         quit.addActionListener((ActionEvent e) -> {
             quit();
         });
 
         return jp;
+    }
+
+
+    public String viewAllUsers(){
+        return theView.getAction().viewUsers();
+    }
+
+    public String addNewUser(){
+        String userN = callInputForUserName();
+        int userId = callInputForUserID();
+        int priv = callInputForAccessNumber();
+        String pw = callInputForUserPassword();
+        return theView.getAction().addNewUser(userN, userId, priv, pw);
+    }
+
+
+    public int callInputForAccessNumber(){
+        int access = -1;
+        while( access < 0){
+        try {
+            access = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter 0 for admin user or positive integer for student user: "));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Invalid number entered, enter 0 or 1", "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+        return access;
     }
 
 

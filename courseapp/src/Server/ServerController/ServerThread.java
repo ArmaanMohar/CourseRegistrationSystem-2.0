@@ -156,10 +156,26 @@ public class ServerThread extends Thread {
                    // String list = model.classlist(name, id);
                     //socketOut.println(list);
                     break;
+                    
+                case 7:
+                    String courseTakenbyStu = model.viewCourseListofStu(id);
+                    socketOut.println(courseTakenbyStu);
+                    socketOut.flush();
+                    break;
                     */
+                case 8:
+                    String users = model.viewUsers();
+                    socketOut.println(users);
+                    socketOut.flush();
+                    break;
+                case 9:
+                    String newUser = model.addUser(name, id, secNum, pw);
+                    socketOut.println(newUser);
+                    socketOut.flush();
+                    break;
                 case 10:
                     socketOut.flush();
-                    String accessGranted = model.validateUser(id, pw, name);
+                    String accessGranted = model.validateUser(id, pw, name, secNum);
                     socketOut.println(accessGranted);
                     socketOut.flush();
                     break;

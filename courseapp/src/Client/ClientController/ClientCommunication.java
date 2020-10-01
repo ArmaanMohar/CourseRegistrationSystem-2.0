@@ -155,9 +155,9 @@ public class ClientCommunication {
 		return communicate("5 stuCourses 0 0 0 0");
 	}
 
-	public String checkPW(int ID, String p, String n){
+	public String checkPW(int ID, String p, String n, int view){
 		String line = "10 ";
-		line += n + " " + ID + " 0" + " 0" + " " + p;
+		line += n + " " + ID + " " + view + " 0" + " " + p;
 		return communicate(line);
 	}
 
@@ -174,6 +174,22 @@ public class ClientCommunication {
 		}
 		System.out.println("Server connection aborted!!");
 	}
+
+	public String addNewUser(String usern, int id, int pr, String p){
+		String line = "9 ";
+		line += usern + " " + id + " " + pr + " 0 "  + p;
+		return communicate(line);
+	}
+
+	public String viewUsers(){
+		return communicate("8 view 0 0 0 0");
+	}
+
+	/*
+	public String viewThisStudentCourse(int id){
+		return communicate("7 list " + id + " 0" + " 0" + " n");
+	}
+	*/
 
 	/**
 	 * helps other functions to send the data to server

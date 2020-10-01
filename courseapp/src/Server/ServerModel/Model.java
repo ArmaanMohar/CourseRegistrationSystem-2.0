@@ -41,21 +41,77 @@ public class Model {
 	    }
     }
 
-    public String validateUser(int ID, String pw, String n){
+    public String viewUsers(){
+        String result = "#Here's the current users #";
+        try {
+            search = myCon.prepareStatement("SELECT privileges, userID, username FROM mydb.users");
+            myRs = search.executeQuery();
+            if(!myRs.isBeforeFirst()){
+                result += "#No users in database #";
+                return result;
+            } else{
+            while(myRs.next()){
+                int auth = myRs.getInt("privileges");
+                int ID = myRs.getInt("userID");
+                String name = myRs.getString("userName");
+                if(auth > 0){
+                    result += "# # USERNAME: " + name + " USERID: " + ID + ", is a student # #";
+                }
+                if(auth == 0){
+                    result += "# # USERNAME: " + name + " USERID: " + ID + ", is a admin # #";
+                }
+            }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String addUser(String name, int id, int authority, String pass){
+        String result = "";
+        try {
+            if( authority > 0){
+                String student = "INSERT INTO mydb.student VALUES((?),(?),(?))";
+                search = myCon.prepareStatement(student);
+                search.setString(1, name);
+                search.setInt(2, id);
+                search.setInt(3, id);
+                search.executeUpdate();
+            }
+            search = myCon.prepareStatement("INSERT INTO mydb.users VALUES((?),(?),(?),(?))");
+            search.setInt(1, authority);
+            search.setInt(2, id);
+            search.setString(3, name);
+            search.setString(4, pass);
+            search.executeUpdate();
+            result += "# Successfully added user #";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String validateUser(int ID, String pw, String n, int v){
         String result = "# ";
         try {
-            search = myCon.prepareStatement("SELECT userName FROM mydb.users WHERE userPassword=(?) and userID=(?) and userName=(?)");
+            search = myCon.prepareStatement("SELECT userName, privileges FROM mydb.users WHERE userPassword=(?) and userID=(?) and userName=(?)");
             search.setString(1, pw);
             search.setInt(2, ID);
             search.setString(3, n);
             myRs = search.executeQuery();
-            if(myRs.isBeforeFirst()){
-                do {
-                    String userName = myRs.getString("userName");
-                result += userName;
-                } while (myRs.next());
-            }else if(!myRs.isBeforeFirst()){
+            if(myRs.next() == false){
                 result = "# -1";
+            } else{
+                do {
+                    int p = myRs.getInt("privileges");
+                    String userName = myRs.getString("userName");
+                    if( p == v){
+                        result += userName;
+                    } else{
+                result = "# -1";
+                    }
+                } while (myRs.next());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,6 +119,17 @@ public class Model {
         
         return result;
     }
+
+    /*
+    public String viewCourseListofStu(int ID){
+        String result = "";
+        try {
+            search = myCon.prepareStatement("SELECT name, secNum FROM mydb.course WHERE")
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+    }
+    */
 
    
 

@@ -26,6 +26,7 @@ public class ClientGUI extends GUI {
         studentName="";
         studentId=-1;
         valid="";
+        view = 1;
         tGUI();
     }
 
@@ -54,11 +55,16 @@ public class ClientGUI extends GUI {
         JPanel jp = new JPanel();
         jp.setLayout(new BoxLayout(jp,1));
 
-        JButton search = new JButton("Search courses in db");
-        JButton addCourse = new JButton("Add course to db");
-        JButton remove = new JButton("Remove course from db");
+        JButton search = new JButton("Search for courses in db");
+        JButton addCourseToMyCourses = new JButton("Add course to my courses");
+        JButton removeCourseFromMyCourses = new JButton("Remove course from my courses");
         JButton viewAll = new JButton("View all the courses in db");
         JButton viewStuCourses = new JButton("View all the courses taken by Student");
+
+
+
+        JButton addCourse = new JButton("Add course to db");
+        JButton remove = new JButton("Remove course from db");
         JButton enterDetails = new JButton("LOG IN");
         JButton quit = new JButton("Quit the application");
 
@@ -137,7 +143,7 @@ public class ClientGUI extends GUI {
                 }
                 this.studentId = Integer.parseInt(ID.getText()); 
                 this.studentName= N.getText();   
-                String valid = validatePassword(studentId , password.getText(), studentName);
+                String valid = validatePassword(studentId , password.getText(), studentName, view);
                 if(valid.equals("# -1")){
                     JOptionPane.showMessageDialog(this,"Invalid Login", "Invalid Login", JOptionPane.ERROR_MESSAGE);
                     return;

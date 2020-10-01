@@ -15,6 +15,7 @@ public abstract class GUI extends JFrame {
     View theView;
     String valid;
     int cap;
+    int view;
 
     public abstract void tGUI();
 
@@ -22,8 +23,8 @@ public abstract class GUI extends JFrame {
 
     abstract JPanel addButtons();
 
-    public String validatePassword(int id, String pw, String name){
-        return theView.getAction().checkPW(id, pw, name);
+    public String validatePassword(int id, String pw, String name, int view){
+        return theView.getAction().checkPW(id, pw, name, view);
     }
 
     /**
@@ -58,6 +59,13 @@ public abstract class GUI extends JFrame {
 
         return;
     }
+
+    /*
+    public String viewThisstudentCourses(){
+        int id = callInputForUserID();
+        return theView.getAction().viewThisStudentCourse(id);
+    }
+    */
 
     abstract String studentCourses();
 
@@ -163,7 +171,7 @@ public abstract class GUI extends JFrame {
     public int callInputForUserID() {
         int id = -1;
         try {
-            id = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter your ID: "));
+            id = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter user ID: "));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid ID entered, Please enter only numeric value", "Error!",
                     JOptionPane.ERROR_MESSAGE);
@@ -175,7 +183,7 @@ public abstract class GUI extends JFrame {
     public String callInputForUserName() {
         String name = "";
         try {
-            name = JOptionPane.showInputDialog(null, "Enter your name");
+            name = JOptionPane.showInputDialog(null, "Enter user name");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
                     JOptionPane.ERROR_MESSAGE);
@@ -191,17 +199,12 @@ public abstract class GUI extends JFrame {
     public String callInputForUserPassword() {
         String name = "";
         try {
-            name = JOptionPane.showInputDialog(null, "Enter your password");
+            name = JOptionPane.showInputDialog(null, "Enter user password");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
                     JOptionPane.ERROR_MESSAGE);
         }
-        String[] mulWords = name.split(" ");
-        if (mulWords[0].isEmpty()) {
-            return mulWords[1]; // return second words if first words entered was space or empty
-        }
-
-        return mulWords[0]; // only accepting the first word entered as the name
+        return name;
     }
     
 
