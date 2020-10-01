@@ -105,7 +105,7 @@ public class ServerThread extends Thread {
 
             switch (choice) {
                 case 1:
-                    String searchedCourse = model.searchCourse(name, id);
+                    String searchedCourse = model.searchCourse(name);
                     socketOut.println(searchedCourse);
                     socketOut.flush();
                     break;
@@ -115,7 +115,7 @@ public class ServerThread extends Thread {
                     socketOut.flush();
                     break;
                 case 3:
-                    String remove = model.removeCourse(name, id);
+                    String remove = model.removeCourse(name);
                     socketOut.println(remove);
                     socketOut.flush();
                     break;
@@ -125,29 +125,7 @@ public class ServerThread extends Thread {
                     socketOut.flush();
                     break;
                     /*
-                case 5:
-                    //String takenCourses = model.coursesTaken();
-                   // socketOut.println(takenCourses);
-                    break;
-                case 6:
-                    model = new Model(name, id);
-                    socketOut.println("VALID #" + "Welcome! #\t" + name + " - " + id
-                            + "# # #Now you can use the system.. # # Please select from the following choices.");
-                    break;
-                case 7:
-                    model = new Model(name, id);
-                    if (name.toUpperCase().equals("PAT") && id == 7) {
-                        socketOut.println("VALID #" + "Welcome Admin! #\t" + name + " - " + id
-                                + "# # #Now you can use the system.. # # Please select from the following choices.");
-                    } else {
-                        socketOut.println("Error! # Invalid Credentials! #");
-                    }
-                    break;
-                case 8:
-                    socketOut.println("Add Course Not Completed Yet!");
-                    // String newCourse = model.addNewCourse(name, id, secNum, cap);
-                    // socketOut.println(newCourse);
-                    break;
+               
                 case 9:
                     //String runnable = model.runCourse(name, id);
                     //socketOut.println(runnable);
@@ -156,7 +134,6 @@ public class ServerThread extends Thread {
                    // String list = model.classlist(name, id);
                     //socketOut.println(list);
                     break;
-                    
                 case 7:
                     String courseTakenbyStu = model.viewCourseListofStu(id);
                     socketOut.println(courseTakenbyStu);

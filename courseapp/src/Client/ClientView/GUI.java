@@ -17,12 +17,29 @@ public abstract class GUI extends JFrame {
     int cap;
     int view;
 
+    /**
+     * sets jframe of app
+     */
     public abstract void tGUI();
 
+    /**
+     * more setup
+     */
     public abstract void prepareGUI();
 
+    /**
+     * adds buttons to app
+     */
     abstract JPanel addButtons();
 
+    /**
+     * Password validation
+     * @param id
+     * @param pw
+     * @param name
+     * @param view
+     * @return
+     */
     public String validatePassword(int id, String pw, String name, int view){
         return theView.getAction().checkPW(id, pw, name, view);
     }
@@ -47,6 +64,9 @@ public abstract class GUI extends JFrame {
         }
     }
 
+    /**
+     * Quit the app
+     */
     public void quit(){
         int res = JOptionPane.showConfirmDialog(null, "Press OK to quit.", "Quit?", JOptionPane.OK_CANCEL_OPTION);
 
@@ -60,15 +80,6 @@ public abstract class GUI extends JFrame {
         return;
     }
 
-    /*
-    public String viewThisstudentCourses(){
-        int id = callInputForUserID();
-        return theView.getAction().viewThisStudentCourse(id);
-    }
-    */
-
-    abstract String studentCourses();
-
     /**
      * Returns allCourses to the buttons, allCourses are received from server
      * through clientCommunication
@@ -79,28 +90,41 @@ public abstract class GUI extends JFrame {
         return theView.getAction().viewAllCourses();
     }
 
+    /**
+     * if student then removes course from schedule if admin then removes course from DB
+     * @return
+     */
     abstract String removeCourse();
 
+    /**
+     * if student then adds course to schedule if admin then adds course to DB
+     * @return
+     */
     abstract String addTheCourse();
 
+    /**
+     * searches for specifed course name
+     * @return
+     */
     public String searchCourse(){
         callForInput(false);
-        return theView.getAction().searchCourse(cName, cID);
+        return theView.getAction().searchCourse(cName);
     }
+
+    /**
+     * if student then shows current schedule if admin then shows schedule of specified student
+     * @return
+     */
+    //abstract String studentCourses();
 
     /**
      * Helps other functions to get input for course name and id
      */
     public void callForInput(boolean act) {
         this.cName = callInputForName();
-        if (cName.isEmpty() || (cName.compareTo(" ") == 0) || cName == null) {
-            JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-            return; // don't ask for id input if name not entered correctly
-        }
-        this.cID = callInputForID();
-        this.cName = this.cName.toUpperCase();
+        System.out.println(cName);
         if (act == true) {
+            this.cID = callInputForID();
             callInputForSection();
             callInputForCap();
         }
@@ -113,9 +137,10 @@ public abstract class GUI extends JFrame {
         int sec = 1;
         try {
             sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter Course Cap Number: "));
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Invalid section entered, Please try again", "Error!",
                     JOptionPane.ERROR_MESSAGE);
+                    callInputForCap();
         }
         this.cap = sec;
     }
@@ -128,9 +153,10 @@ public abstract class GUI extends JFrame {
         int sec = 1;
         try {
             sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter Course Section Number(between 1 and 3): "));
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Invalid section entered, Please try again", "Error!",
                     JOptionPane.ERROR_MESSAGE);
+                    callInputForSection();
         }
         this.cSec = sec;
     }
@@ -145,9 +171,10 @@ public abstract class GUI extends JFrame {
         int id = -1;
         try {
             id = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter Course ID: "));
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Invalid ID entered, Please enter only numeric value", "Error!",
                     JOptionPane.ERROR_MESSAGE);
+                    callInputForID();
         }
 
         return id;
@@ -161,12 +188,21 @@ public abstract class GUI extends JFrame {
      */
     public String callInputForName() {
         String name = "";
-        try {
+        do {
             name = JOptionPane.showInputDialog(null, "Enter Course Name: ");
-        } catch (Exception e) {
+            if(name.matches("-?\\d+") || name.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } while (name.isEmpty() || name.matches("-?\\d+"));
+
+       /* name = JOptionPane.showInputDialog(null, "Enter Course Name: ");
+        if(name.matches("-?\\d+") || name.isEmpty()){
             JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
                     JOptionPane.ERROR_MESSAGE);
         }
+        */
+    
         String[] mulWords = name.split(" ");
         if (mulWords[0].isEmpty()) {
             return mulWords[1]; // return second words if first words entered was space or empty
@@ -175,7 +211,7 @@ public abstract class GUI extends JFrame {
         return mulWords[0]; // only accepting the first word entered as the name
     }
 
-    /**
+    /** logging in
      * @return User ID
      */
     public int callInputForUserID() {
@@ -185,23 +221,32 @@ public abstract class GUI extends JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid ID entered, Please enter only numeric value", "Error!",
                     JOptionPane.ERROR_MESSAGE);
+                    callInputForUserID();
         }
-
         return id;
     }
 
 
     /**
-     * 
+     * logging in
      * @return user Name
      */
     public String callInputForUserName() {
         String name = "";
+        do {
+            name = JOptionPane.showInputDialog(null, "Enter user name");
+            if(name.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } while (name.isEmpty());
+
         try {
             name = JOptionPane.showInputDialog(null, "Enter user name");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
                     JOptionPane.ERROR_MESSAGE);
+                    callInputForUserName();
         }
         String[] mulWords = name.split(" ");
         if (mulWords[0].isEmpty()) {
@@ -212,7 +257,7 @@ public abstract class GUI extends JFrame {
     }
 
     /**
-     * 
+     * logging in
      * @return User password
      */
     public String callInputForUserPassword() {
@@ -222,15 +267,9 @@ public abstract class GUI extends JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
                     JOptionPane.ERROR_MESSAGE);
+                    callInputForUserPassword();
         }
         return name;
     }
-    
-
-
-
-
-
-
     
 }

@@ -184,7 +184,7 @@ public class AdminGUI extends GUI {
             guiSerOutput(viewAllCourses());
         });
         viewStuCourses.addActionListener((ActionEvent e) -> {
-            //guiSerOutput(viewThisstudentCourses());
+            //guiSerOutput(studentCourses());
         });
         addUser.addActionListener((ActionEvent e) ->{
             guiSerOutput(addNewUser());
@@ -199,11 +199,23 @@ public class AdminGUI extends GUI {
         return jp;
     }
 
+    //public String studentCourses(){
+      //  return theView.getAction.getThisStudentList();
+    //}
 
+
+    /**
+     * View all Users in DB
+     * @return
+     */
     public String viewAllUsers(){
         return theView.getAction().viewUsers();
     }
 
+    /**
+     * Adds new User to DB
+     * @return
+     */
     public String addNewUser(){
         String userN = callInputForUserName();
         int userId = callInputForUserID();
@@ -213,6 +225,10 @@ public class AdminGUI extends GUI {
     }
 
 
+    /**
+     * helper function to get privilege input in order to add new users
+     * @return
+     */
     public int callInputForAccessNumber(){
         int access = -1;
         while( access < 0){
@@ -225,127 +241,25 @@ public class AdminGUI extends GUI {
         return access;
     }
 
-
     
     /**
-     * Returns student courses to the buttons, student courses are received from
-     * server through clientCommunication
-     * 
-     * @return studentCourses String
-     */
-    public String studentCourses() {
-        return theView.getAction().showStudentCourses();
-    }
-
-    
-    
-    /**
-     * Invokes remove course in server
+     * Remove course from DB
      * 
      * @return confirmation String confirming the status of removal
      */
     public String removeCourse() {
         callForInput(false);
-        return theView.getAction().removeCourse(cName, cID);
+        return theView.getAction().removeCourse(cName);
     }
 
     /**
-     * Invokes the server to add the course
+     * Add course to DB
      * 
      * @return String confirmation of addition of course
      */
     public String addTheCourse() {
         callForInput(true); // true prompts for input of section number
         return theView.getAction().addCourse(cName, cID, cSec, cap);
-    }
-
-
-    public String searchCourse(){
-        callForInput(false);
-        return theView.getAction().searchCourse(cName, cID);
-    }
-
-    /**
-     * Helps other functions to get input for course name and id
-     */
-    public void callForInput(boolean act) {
-        this.cName = callInputForName();
-        if (cName.isEmpty() || (cName.compareTo(" ") == 0) || cName == null) {
-            JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-            return; // don't ask for id input if name not entered correctly
-        }
-        this.cID = callInputForID();
-        this.cName = this.cName.toUpperCase();
-        if (act == true) {
-            callInputForSection();
-            callInputForCap();
-        }
-    }
-
-    public void callInputForCap() {
-        int sec = 1;
-        try {
-            sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Cap Number: "));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid section entered, Please try again", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        this.cap = sec;
-    }
-
-    /**
-     * Creates input dialog and asks for input from user, sets the input as cSec
-     */
-    public void callInputForSection() {
-        int sec = 1;
-        try {
-            sec = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Section Number: "));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid section entered, Please try again", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        this.cSec = sec;
-    }
-
-    /**
-     * Creates input dialog and asks for input from user
-     * 
-     * @return id integer id entered
-     */
-    public int callInputForID() {
-        int id = -1;
-        try {
-            id = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Course ID: "));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid ID entered, Please enter only numeric value", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-
-        return id;
-    }
-
-    /**
-     * Creates input dialog and asks for input from user
-     * 
-     * @return name first word of string of name
-     */
-    public String callInputForName() {
-        String name = "";
-        try {
-            name = JOptionPane.showInputDialog(null, "Enter the name of the Course");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        String[] mulWords = name.split(" ");
-        if (mulWords[0].isEmpty()) {
-            return mulWords[1]; // return second words if first words entered was space or empty
-        }
-
-        return mulWords[0]; // only accepting the first word entered as the name
-    }
-
-    
+    } 
     
 }

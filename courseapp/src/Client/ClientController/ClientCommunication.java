@@ -99,10 +99,9 @@ public class ClientCommunication {
 	 * @param id   course id
 	 * @return String of server response
 	 */
-	public String searchCourse(String name, int id) {
+	public String searchCourse(String name) {
 		String line = "1 ";
-		line += name + " " + id + " 0" + " 0"+ " "+ " 0";
-
+		line += name + " 0" + " 0" + " 0" + " n";
 		return communicate(line);
 	}
 
@@ -128,9 +127,9 @@ public class ClientCommunication {
 	 * @param id   course id
 	 * @return string of server response
 	 */
-	public String removeCourse(String name, int id) {
+	public String removeCourse(String name) {
 		String line = "3 ";
-		line += name + " " + id + " 0" +" "+ " 0";
+		line += name + " 0" + " 0" + " 0" + " 0";
 
 		return communicate(line);
 	}
@@ -175,26 +174,56 @@ public class ClientCommunication {
 		System.out.println("Server connection aborted!!");
 	}
 
+	/**
+	 * Add new User to DB
+	 * @param usern
+	 * @param id
+	 * @param pr
+	 * @param p
+	 * @return
+	 */
 	public String addNewUser(String usern, int id, int pr, String p){
 		String line = "9 ";
 		line += usern + " " + id + " " + pr + " 0 "  + p;
 		return communicate(line);
 	}
 
+	/**
+	 * View all Users in DB
+	 * @return
+	 */
 	public String viewUsers(){
 		return communicate("8 view 0 0 0 0");
 	}
 
+	/**
+	 * Adds course to student schedule
+	 * @param courseN
+	 * @param stuID
+	 * @param courseSec
+	 * @return
+	 */
 	public String addCourseToStudent(String courseN, int stuID, int courseSec){
 		String line = "7 ";
 		line += courseN + " "+ stuID + " " + courseSec + " 0" + " n";
 		return communicate(line);
 	}
 
+	/**
+	 * get student schedule
+	 * @param ID
+	 * @return
+	 */
 	public String getMyCourseList(int ID){
 		return communicate("6 list"+" "+ID+" 0"+" 0"+ " n");
 	}
 
+	/**
+	 * remove course from student schedule
+	 * @param name
+	 * @param id
+	 * @return
+	 */
 	public String removeCourseFromStu(String name, int id){
 		return communicate("5 "+name+" "+id+" 0"+" 0"+ " n");
 	}

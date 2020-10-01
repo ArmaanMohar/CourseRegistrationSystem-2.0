@@ -161,10 +161,10 @@ public class ClientGUI extends GUI {
             guiSerOutput(searchCourse());
         });
         addCourseToMyCourseList.addActionListener((ActionEvent e) -> {
-            guiSerOutput(addCourseToMySchedule());
+            guiSerOutput(addTheCourse());
         });
         removeCourseFromMyCourseList.addActionListener((ActionEvent e) -> {
-            guiSerOutput(removeCourseFromSchedule());
+            guiSerOutput(removeCourse());
         });
         viewAll.addActionListener((ActionEvent e) -> {
             guiSerOutput(viewAllCourses());
@@ -179,13 +179,13 @@ public class ClientGUI extends GUI {
         return jp;
     }
 
-    public String addCourseToMySchedule(){
+    public String addTheCourse(){
         cName = callInputForName();
         callInputForSection();
         return theView.getAction().addCourseToStudent(this.cName, this.studentId, this.cSec);
     }
 
-    public String removeCourseFromSchedule(){
+    public String removeCourse(){
         cName = callInputForName();
         return theView.getAction().removeCourseFromStu(cName, this.studentId);
     }
@@ -201,33 +201,5 @@ public class ClientGUI extends GUI {
         return theView.getAction().getMyCourseList(this.studentId);
     }
 
-    
-    
-    /**
-     * Invokes remove course in server
-     * 
-     * @return confirmation String confirming the status of removal
-     */
-    public String removeCourse() {
-        callForInput(false);
-        return theView.getAction().removeCourse(cName, cID);
-    }
-
-    /**
-     * Invokes the server to add the course
-     * 
-     * @return String confirmation of addition of course
-     */
-    public String addTheCourse() {
-        callForInput(true); // true prompts for input of section number
-        return theView.getAction().addCourse(cName, cID, cSec, cap);
-    }
-
-
-    public String searchCourse(){
-        callForInput(false);
-        return theView.getAction().searchCourse(cName, cID);
-    }
- 
     
 }

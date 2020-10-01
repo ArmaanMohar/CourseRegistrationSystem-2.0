@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -35,6 +36,9 @@ public class Model {
         
     }
 
+    /**
+     * Connects model to MySQL DB
+     */
     public void connecttoDB(){
         try{
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -45,6 +49,10 @@ public class Model {
 	    }
     }
 
+    /**
+     * View info of All Users in DB
+     * @return
+     */
     public String viewUsers(){
         String result = "#Here's the current users #";
         try {
@@ -72,8 +80,17 @@ public class Model {
         return result;
     }
 
+    /**
+     * Add new user to DB
+     * @param name
+     * @param id
+     * @param authority
+     * @param pass
+     * @return
+     */
     public String addUser(String name, int id, int authority, String pass){
         String result = "";
+        int success=-1;
         try {
             if( authority == 1){
                 search = myCon.prepareStatement("INSERT INTO mydb.student VALUES((?),(?),(?),(?))");
@@ -81,25 +98,42 @@ public class Model {
                 search.setInt(1, id);
                 search.setInt(4, authority);
                 search.setString(3, pass);
-                search.executeUpdate();
+                success = search.executeUpdate();
+                if(success > 0){
                 result += "# Successfully added user #";
+                } else{
+                    result += "# #Error adding student user to db # #";
+                }
             } else if(authority == 0){
             search = myCon.prepareStatement("INSERT INTO mydb.admin VALUES((?),(?),(?),(?))");
             search.setInt(4, authority);
             search.setInt(1, id);
             search.setString(2, name);
             search.setString(3, pass);
-            search.executeUpdate();
+            success = search.executeUpdate();
+            if(success>0){
             result += "# Successfully added user #";
+            } else{
+                result += "# # Error adding admin user to db # #";
+            }
             } else{
                 result += " # Could not add User #";
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+            return result += "# # ERROR ID must be unique # #";
+        } 
         return result;
     }
 
+    /**
+     * Password Validation
+     * @param ID
+     * @param pw
+     * @param n
+     * @param v
+     * @return
+     */
     public String validateUser(int ID, String pw, String n, int v){
         String result = "# ";
         try {
@@ -142,6 +176,7 @@ public class Model {
         String result = "";
         int courseID = -1;
         int csec = -1;
+        int success;
         try {
             search = myCon.prepareStatement("SELECT cID, secNum FROM mydb.course WHERE cName=(?)");
             search.setString(1, courseName);
@@ -160,8 +195,12 @@ public class Model {
                         search.setInt(3, courseSection);
                         numOfReg++;
                         search.setInt(4, numOfReg);
-                        search.executeUpdate();
+                        success = search.executeUpdate();
+                        if(success>0){
                         result += "# successfully added course #";
+                        } else{
+                            result += "# # Error adding course to student # #";
+                        }
                         }
                 } while(myRs.next());
             }            
@@ -181,24 +220,8 @@ public class Model {
      */
     public String getCourseList(int stID){
         String line = "#Here's "+stID+" course schedule";
-        /*ArrayList<Integer> coID = new ArrayList<>(); //course ID's student is registered in
-        try {
-            search = myCon.prepareStatement("SELECT DISTINCT courseID FROM mydb.registraion WHERE stuID=(?)");
-            search.setInt(1, stID);
-            ResultSet list = search.executeQuery();
-            while(list.next()){
-                coID.add(list.getInt("courseID"));
-            }
-
-
-            //for each courseID, append course info to line
-            for(int i= 0; i < coID.size(); i++){
-                search = myCon.prepareStatement("SELECT")
-            }
-            */
             try{
             search = myCon.prepareStatement("SELECT r.stuID, r.cID, r.secNum, c.cName FROM mydb.registration r,mydb.course c WHERE r.cID=c.cID");
-            //search.setInt(1, stID);
             myRs = search.executeQuery();
             while(myRs.next()){
                 String courseName = myRs.getString("cName");
@@ -211,9 +234,16 @@ public class Model {
         return line;
     }
 
+    /**
+     * remove course from student's schedule
+     * @param name
+     * @param sID
+     * @return
+     */
     public String removeFromStudentList(String name, int sID){
         String result = "#trying to remove#";
         int courseID;
+        int success;
         try {
             search = myCon.prepareStatement("SELECT cID FROM mydb.course WHERE cName=(?)");
             search.setString(1, name);
@@ -227,8 +257,14 @@ public class Model {
                 search = myCon.prepareStatement("DELETE FROM mydb.registration WHERE stuID=(?) and cID=(?)");
                 search.setInt(1, sID);
                 search.setInt(2, courseID);
-                search.executeUpdate();
+                success = search.executeUpdate();
+                if(success>0){
                 result += "# #deleted successfully # #";
+                } else if(success == 0){
+                    result += "# # course "+name+" does not exist in student's schedule # #";
+                } else {
+                    result += "# # Error removing course from your schedule # #";
+                }                
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -244,22 +280,23 @@ public class Model {
      * @param id
      * @return
      */
-    public String searchCourse(String name, int id){
+    public String searchCourse(String name){
         String result = "#Heres what I found #";
         try {
-            search = myCon.prepareStatement("SELECT * FROM mydb.course WHERE cName=(?) and cID=(?)");
-            search.setString(1, name.toLowerCase());
-            search.setInt(2, id);
+            search = myCon.prepareStatement("SELECT cName,cID, secNum FROM mydb.course WHERE cName=(?)");
+            search.setString(1, name);
             myRs = search.executeQuery();
             if(myRs.next() == false){
                 result = "# # No such Course exists # #";
             } else{
-            while(myRs.next()){
-                String n = myRs.getString("cName");
+                do{
+                    String n = myRs.getString("cName");
                 int i = myRs.getInt("cID");
-                result += "# # Coursename: " + n + " CourseID: " + i +"# #";
-            }
-            }
+                int sec = myRs.getInt("secNum");
+                result += "# # Coursename: " + n + " CourseID: " + i + " Section Number: "+sec+"# #";
+                }
+            while(myRs.next());
+            } 
         } catch (SQLException e) {
             e.printStackTrace();
         } 
@@ -289,30 +326,55 @@ public class Model {
         return result;
     }
 
-    public String removeCourse(String name, int id){
+    /**
+     * remove course from DB
+     * @param name
+     * @param id
+     * @return
+     */
+    public String removeCourse(String name){
         String result = "#removing course from db...#";
+        int success;
         try {
-            search = myCon.prepareStatement("DELETE FROM mydb.course WHERE cName=(?) and cID=(?)");
+            search = myCon.prepareStatement("DELETE FROM mydb.course WHERE cName=(?)");
             search.setString(1, name);
-            search.setInt(2, id);
-            search.executeUpdate();
+            success = search.executeUpdate();
+            if(success >0){
             result += "# successfully deleted #";
+            } else if(success == 0){
+                result += "# # course "+name+" does not exist # #";
+            } else {
+                result += "# # Error removing course from db # #";
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return result;
     }
 
+    /**
+     * add course to DB
+     * @param name
+     * @param id
+     * @param num
+     * @param cap
+     * @return
+     */
     public String addCourse (String name, int id, int num, int cap){
         String result = "adding new course to db...";
+        int success;
         try {
             search = myCon.prepareStatement("INSERT INTO mydb.course VALUES((?), (?), (?), (?))");
             search.setString(1, name);
             search.setInt(2, id);
             search.setInt(3, num);
             search.setInt(4, cap);
-            search.executeUpdate();
+            success = search.executeUpdate();
+            if(success >0){
             result += "#successfully added course to db #";
+            } else{
+                result += "# #Error adding course to db # #";
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
