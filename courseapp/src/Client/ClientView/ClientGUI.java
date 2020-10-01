@@ -61,6 +61,7 @@ public class ClientGUI extends GUI {
         JButton viewAll = new JButton("View all the courses in db");
         JButton viewMyCourses = new JButton("View all the courses taken by Student");
         JButton enterDetails = new JButton("LOG IN");
+        JButton changePassword = new JButton("Change My Password");
         JButton quit = new JButton("Quit the application");
 
 
@@ -72,6 +73,7 @@ public class ClientGUI extends GUI {
         viewAll.setVisible(detailsEntered);
         viewMyCourses.setVisible(detailsEntered);
         enterDetails.setVisible(!detailsEntered);
+        changePassword.setVisible(detailsEntered);
         quit.setVisible(detailsEntered);
         quit.setVisible(true);
 
@@ -88,6 +90,8 @@ public class ClientGUI extends GUI {
         jp.add(viewAll);
         jp.add(new JLabel(" "));
         jp.add(viewMyCourses);
+        jp.add(new JLabel(" "));
+        jp.add(changePassword);
         jp.add(new JLabel(" "));
         jp.add(quit);
 
@@ -114,7 +118,7 @@ public class ClientGUI extends GUI {
             logIn.add(ID);
 
             JLabel pw = new JLabel("Enter password:");
-            pw.setBounds(10,80, 80,25);
+            pw.setBounds(10,80, 100,25);
             logIn.add(pw);
             JTextField password = new JTextField(20);
             password.setBounds(100,80,165, 25);
@@ -127,7 +131,7 @@ public class ClientGUI extends GUI {
             
             log.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             log.setTitle("Please login here");
-            log.setSize(1000, 200);
+            log.setSize(500, 300);
             log.setVisible(true);
           
 
@@ -151,6 +155,7 @@ public class ClientGUI extends GUI {
                     viewAll.setVisible(detailsEntered);
                     viewMyCourses.setVisible(detailsEntered);
                     enterDetails.setVisible(!detailsEntered);
+                    changePassword.setVisible(detailsEntered);
                     quit.setVisible(true);
                 }     
                 log.dispose();
@@ -172,11 +177,19 @@ public class ClientGUI extends GUI {
         viewMyCourses.addActionListener((ActionEvent e) -> {
             guiSerOutput(studentCourses());
         });
+        changePassword.addActionListener((ActionEvent e) ->{
+            guiSerOutput(changePass());
+        });
         quit.addActionListener((ActionEvent e) -> {
             quit();
         });
 
         return jp;
+    }
+
+    public String changePass(){
+        String pass = newPassword();
+        return theView.getAction().changePassW(studentId, pass);
     }
 
     public String addTheCourse(){

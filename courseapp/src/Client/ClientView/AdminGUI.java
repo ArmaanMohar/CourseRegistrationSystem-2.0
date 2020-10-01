@@ -67,6 +67,7 @@ public class AdminGUI extends GUI {
         JButton enterDetails = new JButton("LOG IN");
         JButton addUser = new JButton("Add New User");
         JButton viewAllUsers = new JButton("View All Users");
+        JButton changePassword = new JButton("Change My Password");
         JButton quit = new JButton("Quit the application");
 
 
@@ -80,6 +81,7 @@ public class AdminGUI extends GUI {
         enterDetails.setVisible(!detailsEntered);
         addUser.setVisible(detailsEntered);
         viewAllUsers.setVisible(detailsEntered);
+        changePassword.setVisible(detailsEntered);
         quit.setVisible(detailsEntered);
         quit.setVisible(true);
 
@@ -100,6 +102,8 @@ public class AdminGUI extends GUI {
         jp.add(addUser);
         jp.add(new JLabel(" "));
         jp.add(viewAllUsers);
+        jp.add(new JLabel(" "));
+        jp.add(changePassword);
         jp.add(new JLabel(" "));
         jp.add(quit);
 
@@ -139,7 +143,7 @@ public class AdminGUI extends GUI {
             
             log.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             log.setTitle("Please Login here");
-            log.setSize(1000, 200);
+            log.setSize(500, 300);
             log.setVisible(true);
           
 
@@ -165,6 +169,7 @@ public class AdminGUI extends GUI {
                     enterDetails.setVisible(!detailsEntered);
                     addUser.setVisible(detailsEntered);
                     viewAllUsers.setVisible(detailsEntered);
+                    changePassword.setVisible(detailsEntered);
                     quit.setVisible(true);
                 }     
                 log.dispose();
@@ -184,13 +189,16 @@ public class AdminGUI extends GUI {
             guiSerOutput(viewAllCourses());
         });
         viewStuCourses.addActionListener((ActionEvent e) -> {
-            //guiSerOutput(studentCourses());
+            guiSerOutput(studentCourses());
         });
         addUser.addActionListener((ActionEvent e) ->{
             guiSerOutput(addNewUser());
         });
         viewAllUsers.addActionListener((ActionEvent e) ->{
             guiSerOutput(viewAllUsers());
+        });
+        changePassword.addActionListener((ActionEvent e) ->{
+            guiSerOutput(changePass());
         });
         quit.addActionListener((ActionEvent e) -> {
             quit();
@@ -199,9 +207,17 @@ public class AdminGUI extends GUI {
         return jp;
     }
 
-    //public String studentCourses(){
-      //  return theView.getAction.getThisStudentList();
-    //}
+    public String changePass(){
+        String pass = newPassword();
+        return theView.getAction().changePassW(adminId, pass);
+    }
+
+    
+
+    public String studentCourses(){
+        int stuId = callInputForUserID();
+        return theView.getAction().getMyCourseList(stuId);
+    }
 
 
     /**

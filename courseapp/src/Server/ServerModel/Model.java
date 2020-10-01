@@ -49,6 +49,51 @@ public class Model {
 	    }
     }
 
+    public String changePassword(String newPass, int userId){
+        String result = "";
+        int success;
+        int priv = -1;
+        try {
+            search = myCon.prepareStatement("SELECT privileges FROM mydb.student WHERE userID=(?) UNION SELECT privileges FROM mydb.admin WHERE userID=(?)");
+            search.setInt(1, userId);
+            search.setInt(2, userId);
+            myRs = search.executeQuery();
+            if(myRs.next() == false){
+                result += "# # User does not exist # #";
+            } else{
+                do {
+                     priv = myRs.getInt("privileges");
+                } while (myRs.next());
+            }
+            if(priv == 1){
+                search = myCon.prepareStatement("UPDATE mydb.student SET userPassword=(?) WHERE userID=(?)");
+            search.setString(1, newPass);
+            search.setInt(2, userId);
+            success = search.executeUpdate();
+            if(success > 0){
+                result += "# #successfully update password # #";                
+            } else{
+                result += "# # Error updating password # #";
+            }
+            } else if(priv == 0){
+                search = myCon.prepareStatement("UPDATE mydb.admin SET userPassword=(?) WHERE userID=(?)");
+                search.setString(1, newPass);
+                search.setInt(2, userId);
+                success = search.executeUpdate();
+                if(success > 0){
+                    result += "# #successfully update password # #";                
+                } else{
+                    result += "# # Error updating password # #";
+                }
+            } else if(priv == -1){
+                result += "# # Critical Error # #";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     /**
      * View info of All Users in DB
      * @return
@@ -219,15 +264,35 @@ public class Model {
      * @return
      */
     public String getCourseList(int stID){
-        String line = "#Here's "+stID+" course schedule";
+        String line = "#Here's the course schedule";
+        int courseid=-1;
+        int secNum=-1;
             try{
-            search = myCon.prepareStatement("SELECT r.stuID, r.cID, r.secNum, c.cName FROM mydb.registration r,mydb.course c WHERE r.cID=c.cID");
+                search = myCon.prepareStatement("SELECT cID, secNum FROM mydb.registration WHERE stuID=(?)");
+                search.setInt(1, stID);
+                myRs = search.executeQuery();
+                if(myRs.next() == false){
+                    line += "# #Student isn't registered in any course # #";
+                    return line;
+                } else{
+                    do {
+                        courseid = myRs.getInt("cID");
+                        secNum = myRs.getInt("secNum");
+                    } while (myRs.next());
+                }
+
+            search = myCon.prepareStatement("SELECT cName FROM mydb.course WHERE cID=(?)");
+            search.setInt(1, courseid);
             myRs = search.executeQuery();
-            while(myRs.next()){
-                String courseName = myRs.getString("cName");
-                int section = myRs.getInt("secNum");
-                line += "# # CourseName: " + courseName + " SectionNumber: "+ section + "# #";
-            }
+            if(myRs.next() == false){
+                line += "# # course not found # #";
+                return line;
+            } else{
+                do {
+                    String courseName = myRs.getString("cName");
+                    line += "# # CourseName: " + courseName + " SectionNumber: "+ secNum + "# #";
+                } while (myRs.next());
+            } 
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -101,6 +101,7 @@ public abstract class GUI extends JFrame {
      * @return
      */
     abstract String addTheCourse();
+    
 
     /**
      * searches for specifed course name
@@ -115,7 +116,7 @@ public abstract class GUI extends JFrame {
      * if student then shows current schedule if admin then shows schedule of specified student
      * @return
      */
-    //abstract String studentCourses();
+    abstract String studentCourses();
 
     /**
      * Helps other functions to get input for course name and id
@@ -221,7 +222,7 @@ public abstract class GUI extends JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid ID entered, Please enter only numeric value", "Error!",
                     JOptionPane.ERROR_MESSAGE);
-                    callInputForUserID();
+                    
         }
         return id;
     }
@@ -269,6 +270,23 @@ public abstract class GUI extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
                     callInputForUserPassword();
         }
+        return name;
+    }
+
+    /**
+     * gets input for new password
+     * @return
+     */
+    public String newPassword() {
+        String name = "";
+        do {
+            name = JOptionPane.showInputDialog(null, "Enter NEW user password");
+            if(name.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Invalid password entered, Please enter a String", "Error!",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } while (name.isEmpty());
+       
         return name;
     }
     

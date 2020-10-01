@@ -26,7 +26,11 @@ public class ClientCommunication {
 		} catch (IOException e) {
 			e.getStackTrace();
 		}
-    }
+	}
+	
+	public String changePassW(int userID, String newP){
+		return communicate("12 "+newP+" "+userID+" 0"+" 0"+" n");
+	}
     /**
 	 * Passes the student information to the server
 	 * 
@@ -227,12 +231,6 @@ public class ClientCommunication {
 	public String removeCourseFromStu(String name, int id){
 		return communicate("5 "+name+" "+id+" 0"+" 0"+ " n");
 	}
-
-	/*
-	public String viewThisStudentCourse(int id){
-		return communicate("7 list " + id + " 0" + " 0" + " n");
-	}
-	*/
 
 	/**
 	 * helps other functions to send the data to server

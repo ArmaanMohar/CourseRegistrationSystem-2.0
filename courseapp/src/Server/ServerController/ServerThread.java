@@ -124,22 +124,6 @@ public class ServerThread extends Thread {
                     socketOut.println(fullCatalogue);
                     socketOut.flush();
                     break;
-                    /*
-               
-                case 9:
-                    //String runnable = model.runCourse(name, id);
-                    //socketOut.println(runnable);
-                    break;
-                case 10:
-                   // String list = model.classlist(name, id);
-                    //socketOut.println(list);
-                    break;
-                case 7:
-                    String courseTakenbyStu = model.viewCourseListofStu(id);
-                    socketOut.println(courseTakenbyStu);
-                    socketOut.flush();
-                    break;
-                    */
                 case 5:
                     String removeCourseFromMyList = model.removeFromStudentList(name, id);
                     socketOut.println(removeCourseFromMyList);
@@ -174,7 +158,15 @@ public class ServerThread extends Thread {
                 case 11:
                     socketOut.flush();
                     closeConnection();
-                
+                case 12:
+                    String changePassword = model.changePassword(name, id);
+                    socketOut.println(changePassword);
+                    socketOut.flush();
+                    break; 
+                case 13:
+                    String coursList = model.getCourseList(id);
+                    socketOut.println(coursList);
+                                  
                 default:
                     socketOut.println("default");
                     closeConnection();
