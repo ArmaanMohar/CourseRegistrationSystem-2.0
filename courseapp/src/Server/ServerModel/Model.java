@@ -1,21 +1,21 @@
 package Server.ServerModel;
 
+import java.io.FileInputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
 import java.util.ArrayList;
-
+import java.util.Properties;
 import Server.ServerController.ServerThread;
 import Server.ServerModel.Registration.*;
 
 
 public class Model {
     private ServerThread myThread;
-    private Statement myState;
     private PreparedStatement search;
     private ResultSet myRs;
     static String URL;
@@ -28,6 +28,7 @@ public class Model {
         myThread = t;
         search = null;
         myRs = null;
+        myCon = null;
         URL = "jdbc:mysql://localhost:3306/mydb";
 		user = "root";
         password = "root";
@@ -41,11 +42,11 @@ public class Model {
      */
     public void connecttoDB(){
         try{
-			Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("Connecting to database...\n");
 			myCon = DriverManager.getConnection(URL, user, password);
-            System.out.println("Client connected to db...");
+            System.out.println("Client connected to db...\n");
 	    } catch (Exception e) {
-		    e.printStackTrace();
+            e.printStackTrace();
 	    }
     }
 
@@ -90,6 +91,8 @@ public class Model {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            result += "# #"+e.getMessage()+"# #";
+            return result;
         }
         return result;
     }
@@ -121,6 +124,8 @@ public class Model {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            result += "# #"+e.getMessage()+"# #";
+            return result;
         }
         return result;
     }
@@ -137,6 +142,13 @@ public class Model {
         String result = "";
         int success=-1;
         try {
+            search = myCon.prepareStatement("SELECT s.userID FROM mydb.student s WHERE s.userID=(?) UNION SELECT a.userID FROM mydb.admin a WHERE a.userID=(?)");
+            myRs = search.executeQuery();
+            if(myRs.next() != false){
+                result += "# # Error userID already exists, userID must be unique # #";
+                return result;
+            } else{
+
             if( authority == 1){
                 search = myCon.prepareStatement("INSERT INTO mydb.student VALUES((?),(?),(?),(?))");
                 search.setString(2, name);
@@ -164,6 +176,7 @@ public class Model {
             } else{
                 result += " # Could not add User #";
             }
+        }
         } catch (SQLException e) {
             e.printStackTrace();
             return result += "# # ERROR ID must be unique # #";
@@ -205,6 +218,8 @@ public class Model {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            result += "# #"+e.getMessage()+"# #";
+            return result;
         } 
         
         return result;
@@ -227,19 +242,24 @@ public class Model {
             search.setString(1, courseName);
             myRs = search.executeQuery();
             if(myRs.next() == false){
-                result += " # error adding course #";
+                result += " # no such course exists #";
             } else{
                 do{
                         courseID = myRs.getInt("cID");
                         csec = myRs.getInt("secNum");
+                        search =  myCon.prepareStatement("SELECT stuID FROM mydb.registration WHERE stuID=(?) and cID=(?)");
+                        search.setInt(1, studentID);
+                        search.setInt(2, courseID);
+                        myRs = search.executeQuery();
+                        if(myRs.next() == false){
                 
                     if(csec <= courseSection || csec >=0){
                         search = myCon.prepareStatement("INSERT INTO mydb.registration VALUES((?),(?),(?),(?))");
                         search.setInt(1, studentID);
                         search.setInt(2, courseID);
                         search.setInt(3, courseSection);
-                        numOfReg++;
                         search.setInt(4, numOfReg);
+                        
                         success = search.executeUpdate();
                         if(success>0){
                         result += "# successfully added course #";
@@ -247,12 +267,19 @@ public class Model {
                             result += "# # Error adding course to student # #";
                         }
                         }
+                    } else{
+                        result += "# # Student already registered in this course # #";
+                    }
                 } while(myRs.next());
             }            
         } catch (SQLException e) {
             e.printStackTrace();
+            result += "# #"+e.getMessage()+"# #";
+            return result;
         } catch (Exception s){
             s.printStackTrace();
+            result += "# #"+s.getMessage()+"# #";
+            return result;
         }
         return result;
     }
@@ -295,6 +322,8 @@ public class Model {
             } 
         } catch (SQLException e) {
             e.printStackTrace();
+            line += "# #"+e.getMessage()+"# #";
+            return line;
         }
         return line;
     }
@@ -333,6 +362,8 @@ public class Model {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            result += "# #"+e.getMessage()+"# #";
+            return result;
         }
         return result;
     }
@@ -364,6 +395,8 @@ public class Model {
             } 
         } catch (SQLException e) {
             e.printStackTrace();
+            result += "# #"+e.getMessage()+"# #";
+            return result;
         } 
         System.out.println(result);
         return result;  
@@ -387,6 +420,8 @@ public class Model {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            result += "# #"+e.getMessage()+"# #";
+            return result;
         }
         return result;
     }
@@ -413,6 +448,8 @@ public class Model {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            result += "# #"+e.getMessage() + "# #";
+            return result;
         }
         return result;
     }
@@ -442,6 +479,8 @@ public class Model {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            result += "# #"+e.getMessage()+"# #";
+            return result;
         }
         return result;
     }

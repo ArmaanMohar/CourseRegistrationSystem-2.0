@@ -196,13 +196,6 @@ public abstract class GUI extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
         } while (name.isEmpty() || name.matches("-?\\d+"));
-
-       /* name = JOptionPane.showInputDialog(null, "Enter Course Name: ");
-        if(name.matches("-?\\d+") || name.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        */
     
         String[] mulWords = name.split(" ");
         if (mulWords[0].isEmpty()) {
@@ -222,6 +215,7 @@ public abstract class GUI extends JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid ID entered, Please enter only numeric value", "Error!",
                     JOptionPane.ERROR_MESSAGE);
+                    callInputForUserID();
                     
         }
         return id;
@@ -242,13 +236,6 @@ public abstract class GUI extends JFrame {
             }
         } while (name.isEmpty());
 
-        try {
-            name = JOptionPane.showInputDialog(null, "Enter user name");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
-                    JOptionPane.ERROR_MESSAGE);
-                    callInputForUserName();
-        }
         String[] mulWords = name.split(" ");
         if (mulWords[0].isEmpty()) {
             return mulWords[1]; // return second words if first words entered was space or empty
@@ -263,13 +250,13 @@ public abstract class GUI extends JFrame {
      */
     public String callInputForUserPassword() {
         String name = "";
-        try {
+        do{
             name = JOptionPane.showInputDialog(null, "Enter user password");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid name entered, Please enter a String", "Error!",
+            if(name.isEmpty()){
+                JOptionPane.showMessageDialog(null, "Invalid password entered, Please enter a String", "Error!",
                     JOptionPane.ERROR_MESSAGE);
-                    callInputForUserPassword();
-        }
+            }
+        } while (name.isEmpty());
         return name;
     }
 
