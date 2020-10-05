@@ -53,7 +53,8 @@ public class ServerThread extends Thread {
     private ServerCommunication serCom;
     static String URL;
 	private String user;
-	private String password;
+    private String password;
+    private Connection myCon;
     
 
     /**
@@ -69,30 +70,17 @@ public class ServerThread extends Thread {
         } catch (Exception e) {
             System.out.println("Socket reading failed.");
         }
+        this.model = new Model(this);
         running = true;
         this.serCom = serCom;
-        URL = "jdbc:mysql://localhost:3306/mydb";
-		user = "root";
-        password = "root";
-        connecttoDB();
     }
 
-    public void connecttoDB(){
-        try{
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection myCon = DriverManager.getConnection(URL, user, password);
-			Statement myState = myCon.createStatement();
-			String sql = "insert into student" + "(name, id)" + "values ('water', '67')";
-			myState.executeUpdate(sql);
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-    }
 
     /**
      * Runs the thread
      */
     public void run() {
+        socketOut.flush();
         String line = "";
 
         while (running) {
@@ -113,63 +101,72 @@ public class ServerThread extends Thread {
             int id = Integer.parseInt(inputs[2]); // args String
             int secNum = Integer.parseInt(inputs[3]); // args String passed into int
             int cap = Integer.parseInt(inputs[4]);
+            String pw = inputs[5];
 
             switch (choice) {
                 case 1:
-                    String searchedCourse = model.searchCourse(name, id);
+                    String searchedCourse = model.searchCourse(name);
                     socketOut.println(searchedCourse);
+                    socketOut.flush();
                     break;
-                    /*
                 case 2:
-                    //String addedCourse = model.addCourse(name, id, secNum);
-                    //socketOut.println(addedCourse);
+                    String addedCourse = model.addCourse(name, id, secNum, cap);
+                    socketOut.println(addedCourse);
+                    socketOut.flush();
                     break;
                 case 3:
-                    //String remove = model.removeCourse(name, id);
-                   // socketOut.println(remove);
+                    String remove = model.removeCourse(name);
+                    socketOut.println(remove);
+                    socketOut.flush();
                     break;
                 case 4:
-                    //String fullCatalogue = model.viewAllCourses();
-                   // socketOut.println(fullCatalogue);
+                    String fullCatalogue = model.viewAllCourses();
+                    socketOut.println(fullCatalogue);
+                    socketOut.flush();
                     break;
                 case 5:
-                    //String takenCourses = model.coursesTaken();
-                   // socketOut.println(takenCourses);
+                    String removeCourseFromMyList = model.removeFromStudentList(name, id);
+                    socketOut.println(removeCourseFromMyList);
+                    socketOut.flush();
                     break;
                 case 6:
-                    model = new Model(name, id);
-                    socketOut.println("VALID #" + "Welcome! #\t" + name + " - " + id
-                            + "# # #Now you can use the system.. # # Please select from the following choices.");
+                    String courseList = model.getCourseList(id);
+                    socketOut.println(courseList);
+                    socketOut.flush();
                     break;
                 case 7:
-                    model = new Model(name, id);
-                    if (name.toUpperCase().equals("PAT") && id == 7) {
-                        socketOut.println("VALID #" + "Welcome Admin! #\t" + name + " - " + id
-                                + "# # #Now you can use the system.. # # Please select from the following choices.");
-                    } else {
-                        socketOut.println("Error! # Invalid Credentials! #");
-                    }
+                    String courseAdded = model.addCourseStudent(name, id, secNum);
+                    socketOut.println(courseAdded);
+                    socketOut.flush();
                     break;
                 case 8:
-                    socketOut.println("Add Course Not Completed Yet!");
-                    // String newCourse = model.addNewCourse(name, id, secNum, cap);
-                    // socketOut.println(newCourse);
+                    String users = model.viewUsers();
+                    socketOut.println(users);
+                    socketOut.flush();
                     break;
                 case 9:
-                    //String runnable = model.runCourse(name, id);
-                    //socketOut.println(runnable);
+                    String newUser = model.addUser(name, id, secNum, pw);
+                    socketOut.println(newUser);
+                    socketOut.flush();
                     break;
                 case 10:
-                   // String list = model.classlist(name, id);
-                    //socketOut.println(list);
+                    socketOut.flush();
+                    String accessGranted = model.validateUser(id, pw, name, secNum);
+                    socketOut.println(accessGranted);
+                    socketOut.flush();
                     break;
-                    */
                 case 11:
+                    socketOut.flush();
                     closeConnection();
                 case 12:
-                    model = new Model();
-                    socketOut.println(model.worked(model.getS()));
-                    break;
+                    String changePassword = model.changePassword(name, id);
+                    socketOut.println(changePassword);
+                    socketOut.flush();
+                    break; 
+                case 13:
+                    String coursList = model.getCourseList(id);
+                    socketOut.println(coursList);
+                                  
                 default:
                     socketOut.println("default");
                     closeConnection();

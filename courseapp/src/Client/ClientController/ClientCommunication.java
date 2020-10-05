@@ -26,11 +26,11 @@ public class ClientCommunication {
 		} catch (IOException e) {
 			e.getStackTrace();
 		}
-    }
-    public String populate(){
-        String line = "12 0 0 0 0";
-        return communicate(line);
-    }
+	}
+	
+	public String changePassW(int userID, String newP){
+		return communicate("12 "+newP+" "+userID+" 0"+" 0"+" n");
+	}
     /**
 	 * Passes the student information to the server
 	 * 
@@ -40,7 +40,7 @@ public class ClientCommunication {
 	 */
 	public String passStudentInfo(String studentName, int studentId) {
 		String line = "6 ";
-		line += studentName + " " + studentId + " 0";
+		line += studentName + " " + studentId + " 0" + " 0";
 
 		return communicate(line);
 	}
@@ -53,7 +53,7 @@ public class ClientCommunication {
 	 */
 	public String showClasslist(String name, int id){
 		String line = "10 ";
-		line += name + " " + id + " 0";
+		line += name + " " + id + " 0" + " 0" + " ";
 		return communicate(line);
 	}
 
@@ -67,7 +67,7 @@ public class ClientCommunication {
 	 */
 	public String addNewCourse(String name, int id, int sec, int cap){
 		String line = "8 ";
-		line += name + " " + id + " " + sec +  " " + cap + " 0";
+		line += name + " " + id + " " + sec +  " " + cap + " 0"+ " ";
 		return communicate(line);
 	}
 
@@ -79,7 +79,7 @@ public class ClientCommunication {
 	 */
 	public String checkifCourseCanRun(String courseName, int courseId){
 		String line = "9 ";
-		line += courseName + " " + courseId + " 0";
+		line += courseName + " " + courseId + " 0" + " " + " 0" ;
 		return communicate(line);
 	}
 
@@ -91,7 +91,7 @@ public class ClientCommunication {
 	 */
 	public String passAdminInfo(String adminName, int adminId){
 		String line = "7 ";
-		line += adminName + " " + adminId + " 0";
+		line += adminName + " " + adminId + " 0" + " "+ " 0";
 		return communicate(line);
 	}
 
@@ -103,10 +103,9 @@ public class ClientCommunication {
 	 * @param id   course id
 	 * @return String of server response
 	 */
-	public String searchCourse(String name, int id) {
+	public String searchCourse(String name) {
 		String line = "1 ";
-		line += name + " 0" + id + " 0";
-
+		line += name + " 0" + " 0" + " 0" + " n";
 		return communicate(line);
 	}
 
@@ -118,9 +117,9 @@ public class ClientCommunication {
 	 * @param sec  course section
 	 * @return string of server response
 	 */
-	public String addCourse(String name, int id, int sec) {
+	public String addCourse(String name, int id, int sec, int cap) {
 		String line = "2 ";
-		line += name + " " + id + " " + sec;
+		line += name + " " + id + " " + sec + " " + cap + " 0";
 
 		return communicate(line);
 	}
@@ -132,9 +131,9 @@ public class ClientCommunication {
 	 * @param id   course id
 	 * @return string of server response
 	 */
-	public String removeCourse(String name, int id) {
+	public String removeCourse(String name) {
 		String line = "3 ";
-		line += name + " " + id + " 0";
+		line += name + " 0" + " 0" + " 0" + " 0";
 
 		return communicate(line);
 	}
@@ -146,7 +145,7 @@ public class ClientCommunication {
 	 * @return server response string
 	 */
 	public String viewAllCourses() {
-		return communicate("4 allCourses 0 0");
+		return communicate("4 allCourses 0 0 0 0");
 	}
 
 	/**
@@ -156,14 +155,20 @@ public class ClientCommunication {
 	 * @return server response string
 	 */
 	public String showStudentCourses() {
-		return communicate("5 stuCourses 0 0");
+		return communicate("5 stuCourses 0 0 0 0");
+	}
+
+	public String checkPW(int ID, String p, String n, int view){
+		String line = "10 ";
+		line += n + " " + ID + " " + view + " 0" + " "+ p;
+		return communicate(line);
 	}
 
 	/**
 	 * Closes the connection to server and turns off the server
 	 */
 	public void closeCon() {
-		communicate("11 closeCon 0 0");
+		communicate("11 closeCon 0 0 0 0");
 		try {
 			socketIn.close();
 			socketOut.close();
@@ -171,6 +176,60 @@ public class ClientCommunication {
 			e.getStackTrace();
 		}
 		System.out.println("Server connection aborted!!");
+	}
+
+	/**
+	 * Add new User to DB
+	 * @param usern
+	 * @param id
+	 * @param pr
+	 * @param p
+	 * @return
+	 */
+	public String addNewUser(String usern, int id, int pr, String p){
+		String line = "9 ";
+		line += usern + " " + id + " " + pr + " 0 "  + p;
+		return communicate(line);
+	}
+
+	/**
+	 * View all Users in DB
+	 * @return
+	 */
+	public String viewUsers(){
+		return communicate("8 view 0 0 0 0");
+	}
+
+	/**
+	 * Adds course to student schedule
+	 * @param courseN
+	 * @param stuID
+	 * @param courseSec
+	 * @return
+	 */
+	public String addCourseToStudent(String courseN, int stuID, int courseSec){
+		String line = "7 ";
+		line += courseN + " "+ stuID + " " + courseSec + " 0" + " n";
+		return communicate(line);
+	}
+
+	/**
+	 * get student schedule
+	 * @param ID
+	 * @return
+	 */
+	public String getMyCourseList(int ID){
+		return communicate("6 list"+" "+ID+" 0"+" 0"+ " n");
+	}
+
+	/**
+	 * remove course from student schedule
+	 * @param name
+	 * @param id
+	 * @return
+	 */
+	public String removeCourseFromStu(String name, int id){
+		return communicate("5 "+name+" "+id+" 0"+" 0"+ " n");
 	}
 
 	/**
