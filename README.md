@@ -6,17 +6,18 @@ A Course Registration System in Java developed as a Client-Server application wi
     2. open another terminal->navigate to src. complie:javac .\Client\ClientController\ClientCommunication.java then run: java Client.ClientController.ClientCommunication
     *******************************NOTE: Server must be initialized before running client**********************************************************************************
 
-  To log in as an admin: username: addy
-                        userID: 23
-                       password: pop
+
+To log in as an admin-> username: addy
+                          userID: 23
+                          password: pop
                        
-To log in as a student: username: stu
-                        userID: 8
-                        password: student
+To log in as a student-> username: stu
+                         userID: 8
+                         password: student
                         
-To log in as a client: username: client
-                       userID: 0
-                       password: myclient
+To log in as a client-> username: client
+                        userID: 0
+                        password: myclient
                        
 - Client & Server packages adopt the Model, View, Controller architecture where the Server Model communicates with a MySQL database.
                        
