@@ -1,9 +1,10 @@
 # CourseRegistrationSystem-2.0
-A Course Registration System in Java using Client-Server architecture 
+A Course Registration System in Java developed as a Client-Server application with a Graphical User Interface for clients to interact with
 
-Logging In -- Credientials
+    How to Run:
+    1. open a new terminal and navigate to src. run: 
 
-To log in as an admin: username: addy
+  To log in as an admin: username: addy
                         userID: 23
                        password: pop
                        
