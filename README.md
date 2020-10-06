@@ -2,7 +2,9 @@
 A Course Registration System in Java developed as a Client-Server application with a Graphical User Interface for clients to interact with
 
     How to Run:
-    1. open a new terminal and navigate to src. run: 
+    1. open a new terminal->navigate to src. compile: javac .\Server\ServerController\ServerCommunication.java then run: java Server.ServerController.ServerCommunication 
+    2. open another terminal->navigate to src. complie:javac .\Client\ClientController\ClientCommunication.java then run: java Client.ClientController.ClientCommunication
+    *******************************NOTE: Server must be initialized before running client**********************************************************************************
 
   To log in as an admin: username: addy
                         userID: 23
