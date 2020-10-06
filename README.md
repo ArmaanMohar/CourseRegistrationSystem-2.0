@@ -7,7 +7,7 @@ A Course Registration System in Java developed as a Client-Server application wi
     *******************************NOTE: Server must be initialized before running client**********************************************************************************
 
 
-To log in as an admin-> username: addy
+To log in as an admin-> "username:" addy
                           userID: 23
                           password: pop
                        
