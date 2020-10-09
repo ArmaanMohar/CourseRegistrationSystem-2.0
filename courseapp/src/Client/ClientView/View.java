@@ -15,6 +15,7 @@ public class View extends JFrame{
     private ClientCommunication action;
     private ClientGUI cg;
     private AdminGUI ag;
+    private StudentGUI sg;
    
     public View(ClientCommunication ccm){
         super("Welcome to Course Registration System");
@@ -27,19 +28,21 @@ public class View extends JFrame{
         JPanel p = new JPanel();
         p.setLayout(new GridLayout(5,3));
         JButton admin = new JButton("Admin");
-        JButton user = new JButton("Student");
+        JButton student = new JButton("Student");
+        JButton client = new JButton("Client");
 
-        for(int i =0; i<2; i++){
+        for(int i =0; i<1; i++){
         p.add(new JLabel(" "));
         }
         p.add(admin);
-        for(int j =0; j<3; j++){
+        for(int j =0; j<1; j++){
             p.add(new JLabel(" "));
         }
-        p.add(user);
-        for(int i =0; i<3; i++){
+        p.add(student);
+        for(int i =0; i<1; i++){
             p.add(new JLabel(" "));
         }
+        p.add(client);
 
         setVisible(true);
 
@@ -48,9 +51,13 @@ public class View extends JFrame{
             runView(a);
         });
 
-        user.addActionListener((ActionEvent e) ->{
+        student.addActionListener((ActionEvent e) ->{
             String s = "student";
             runView(s);
+        });
+        client.addActionListener((ActionEvent e) ->{
+            String c = "client";
+            runView(c);
         });
         return p;
     }
@@ -59,8 +66,11 @@ public class View extends JFrame{
         if(t.equals("admin")){
             this.ag = new AdminGUI(this);
         }
-        if(t.equals("student")){
+        if(t.equals("client")){
             this.cg = new ClientGUI(this);
+        }
+        if(t.equals("student")){
+            this.sg = new StudentGUI(this);
         }
     }
 
